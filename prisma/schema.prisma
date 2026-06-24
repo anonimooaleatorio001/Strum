@@ -1,0 +1,160 @@
+// Strum data model — Phase 1 foundation.
+// Curriculum (units/skills/exercises) is generated deterministically in code
+// (src/lib/curriculum.ts); the database stores only users and their progress.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Instrument {
+  GUITAR
+  BASS
+}
+
+enum Handedness {
+  LEFT
+  RIGHT
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime   @default(now())
+
+  // Onboarding profile
+  onboarded    Boolean    @default(false)
+  instrument   Instrument @default(GUITAR)
+  handedness   Handedness @default(RIGHT)
+  numStrings   Int        @default(6)
+
+  // Settings
+  dailyGoalXp  Int        @default(50)
+  settings     Json?      // { reminders, metronome, waitMode, camera, ... }
+  deadFrets    Json?      // string -> number[] of frets the instrument can't play
+
+  progress     Progress?
+  attempts     Attempt[]
+  xpEvents     XpEvent[]
+  skills       SkillStrength[]
+  songs        Song[]
+  compositions Composition[]
+  glossarySeen GlossarySeen[]
+  achievements AchievementUnlock[]
+}
+
+// One-to-one rolling gamification state.
+model Progress {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  xp             Int      @default(0)
+  streak         Int      @default(0)
+  lastActiveDate String   @default("") // YYYY-MM-DD
+  dailyXp        Int      @default(0)
+  dailyDate      String   @default("") // YYYY-MM-DD
+  streakFreezeAt String   @default("") // YYYY-MM-DD a freeze was applied
+
+  updatedAt      DateTime @updatedAt
+}
+
+// Half-life regression / skill strength for spaced review.
+model SkillStrength {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillId   String
+  strength  Float    @default(0)
+  reviewAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, skillId])
+}
+
+// One graded attempt at an exercise.
+model Attempt {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  skillId    String
+  crown      Int      @default(1) // 1..5
+  pitchScore Float    @default(0)
+  tempoScore Float    @default(0)
+  passed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([userId, exerciseId])
+}
+
+// Atomic XP ledger.
+model XpEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// Imported song ("Suas músicas").
+model Song {
+  id         String     @id @default(cuid())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  artist     String?
+  source     String     @default("import") // songsterr | gp | musicxml | midi | import
+  instrument Instrument @default(GUITAR)
+  data       Json       // sections / tracks / notes
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+// User-created score (compositor).
+model Composition {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  instrument  Instrument @default(GUITAR)
+  bpm         Int        @default(90)
+  bars        Int        @default(4)
+  subdivision Int        @default(4)
+  grid        Json       // strings x steps
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+// Glossary terms a user has marked as understood.
+model GlossarySeen {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  termId String
+
+  @@unique([userId, termId])
+}
+
+model AchievementUnlock {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId    String
+  unlockedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}

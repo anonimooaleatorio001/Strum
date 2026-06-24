@@ -1,4 +1,4 @@
-// Pitch detection + musical-note maths used by the Tuner.
+// Pitch detection + musical-note maths used by the Tuner and (later) the grader.
 
 export const NOTE_STRINGS = [
   "C",
@@ -13,16 +13,6 @@ export const NOTE_STRINGS = [
   "A",
   "A#",
   "B",
-];
-
-/** The six open strings of a guitar in standard tuning (low → high), as MIDI numbers. */
-export const GUITAR_STRINGS: { label: string; midi: number }[] = [
-  { label: "E2", midi: 40 },
-  { label: "A2", midi: 45 },
-  { label: "D3", midi: 50 },
-  { label: "G3", midi: 55 },
-  { label: "B3", midi: 59 },
-  { label: "E4", midi: 64 },
 ];
 
 export function frequencyFromNoteNumber(note: number): number {
@@ -48,23 +38,11 @@ export function noteOctave(midi: number): number {
   return Math.floor(midi / 12) - 1;
 }
 
-/** Nearest standard-tuning string for a given MIDI note (by absolute distance). */
-export function nearestString(midi: number): number {
-  let best = 0;
-  let bestDist = Infinity;
-  GUITAR_STRINGS.forEach((s, i) => {
-    const d = Math.abs(s.midi - midi);
-    if (d < bestDist) {
-      bestDist = d;
-      best = i;
-    }
-  });
-  return best;
-}
-
 /**
  * Classic ACF2+ autocorrelation pitch detector (Chris Wilson). Returns the
  * fundamental frequency in Hz, or -1 when the signal is too quiet / unpitched.
+ * (Phase 3 upgrades the in-lesson grader to pitchy/MPM in an AudioWorklet; the
+ * tuner uses this lightweight detector.)
  */
 export function autoCorrelate(buf: Float32Array, sampleRate: number): number {
   const SIZE = buf.length;
@@ -74,7 +52,7 @@ export function autoCorrelate(buf: Float32Array, sampleRate: number): number {
     rms += val * val;
   }
   rms = Math.sqrt(rms / SIZE);
-  if (rms < 0.01) return -1; // not enough signal
+  if (rms < 0.01) return -1;
 
   let r1 = 0;
   let r2 = SIZE - 1;
@@ -113,7 +91,6 @@ export function autoCorrelate(buf: Float32Array, sampleRate: number): number {
   }
   let T0 = maxpos;
 
-  // Parabolic interpolation for sub-sample accuracy.
   const x1 = c[T0 - 1];
   const x2 = c[T0];
   const x3 = c[T0 + 1];
