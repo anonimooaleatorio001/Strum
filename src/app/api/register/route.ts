@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { registerSchema } from "@/lib/validation";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -21,23 +23,36 @@ export async function POST(req: Request) {
 
   const { name, email, password } = parsed.data;
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
+  try {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return NextResponse.json(
+        { error: "Já existe uma conta com esse e-mail." },
+        { status: 409 }
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    await prisma.user.create({
+      data: {
+        email,
+        name: name ?? null,
+        passwordHash,
+        progress: { create: {} },
+      },
+    });
+
+    return NextResponse.json({ ok: true }, { status: 201 });
+  } catch (err) {
+    // Surface the real cause (DB unreachable, missing tables, etc.) so it can
+    // be diagnosed instead of hiding behind a generic message.
+    const e = err as { name?: string; message?: string; code?: string };
+    console.error("register error", e);
     return NextResponse.json(
-      { error: "Já existe uma conta com esse e-mail." },
-      { status: 409 }
+      {
+        error: `Erro no servidor (${e.code ?? e.name ?? "desconhecido"}). Tente /api/health para detalhes.`,
+      },
+      { status: 500 }
     );
   }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-  await prisma.user.create({
-    data: {
-      email,
-      name: name ?? null,
-      passwordHash,
-      progress: { create: {} },
-    },
-  });
-
-  return NextResponse.json({ ok: true }, { status: 201 });
 }
