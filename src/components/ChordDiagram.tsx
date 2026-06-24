@@ -1,4 +1,4 @@
-import type { Fret } from "../tools/chordData";
+import type { Fret } from "@/lib/chords";
 
 interface Props {
   frets: Fret[];

@@ -1,60 +1,83 @@
 # 🎸 Strum
 
-**Learn guitar the fun way.** Strum is a Duolingo-style guitar trainer that puts
-the four things a beginner reaches for most — a course, a tuner, a metronome and
-a chord library — in one calm, focused place. No sign-up, nothing to install,
-and your microphone audio never leaves the device.
+**Aprenda violão e baixo do jeito divertido.** Strum é um treinador de
+instrumentos de corda no estilo Duolingo: uma trilha de lições com XP, streak e
+coroas, mais um afinador, metrônomo e biblioteca de acordes — tudo em um lugar
+calmo e focado.
 
-Built with **React 18 + TypeScript + Vite + Tailwind CSS**, an animated hero
-backdrop from the [`shaders`](https://www.npmjs.com/package/shaders) package, and
-the Web Audio API for real tuning and sound.
+Construído com **Next.js (App Router) + TypeScript + Tailwind CSS**,
+autenticação com **NextAuth v5**, banco de dados **Postgres via Prisma**, e a
+**Web Audio API** para afinação e som reais.
 
-## Palette
+## Paleta
 
-The whole interface is built from just two brand colours and complementary
-tints of them:
+| Token  | Hex       | Uso                                       |
+| ------ | --------- | ----------------------------------------- |
+| Cyprus | `#004741` | Primária — texto, botões, destaques       |
+| Sand   | `#F0EDE4` | Fundos e superfícies                      |
+| Ochre  | `#C8893B` | Apenas para streak / XP (complementar)   |
 
-| Token  | Hex       | Use                              |
-| ------ | --------- | -------------------------------- |
-| Cyprus | `#004741` | Primary — text, buttons, accents |
-| Sand   | `#F0EDE4` | Backgrounds and surfaces         |
+## Arquitetura (Fase 1 — fundação)
 
-A single warm, complementary ochre (`#C8893B`) is used sparingly for the
-streak / XP highlights.
+- **Auth** — cadastro/login/logout com NextAuth v5 (Credentials + JWT), senhas
+  com bcrypt. Middleware protege `/app` e `/onboarding`; isolamento por `userId`.
+- **Onboarding** — escolha de instrumento (violão **ou** baixo), número de
+  cordas (4–6) e destro/canhoto.
+- **Banco** — Postgres + Prisma. Modelos: `User`, `Progress`, `Attempt`,
+  `XpEvent`, `SkillStrength`, `Song`, `Composition`, `GlossarySeen`,
+  `AchievementUnlock`.
+- **Currículo determinístico** — 6 unidades × skills × exercícios gerados por
+  seed (`src/lib/curriculum.ts`), iguais para todo mundo, sem ocupar o banco.
+- **Gamificação no servidor** — XP atômico, streak com freeze de 1 dia, meta
+  diária, coroas, ledger de XP.
+- **Ferramentas** — afinador (já com afinação de violão **e** baixo), metrônomo
+  e biblioteca de acordes.
+- **Shell + PWA** — sidebar no desktop, bottom-nav no mobile, manifest.
 
-## The toolkit
-
-- **Learn** — a winding, level-up lesson path (3 units, 9 lessons). Quizzes mix
-  theory questions with "name the chord" diagrams. Earn XP, build a daily
-  streak, and unlock the next lesson — all progress is saved to `localStorage`.
-- **Tuner** — a real chromatic tuner. It listens through your microphone, detects
-  pitch with an autocorrelation (ACF2+) algorithm, and shows the note, cents
-  offset and the nearest standard-tuning string (E A D G B E).
-- **Metronome** — sample-accurate timing using a Web Audio look-ahead scheduler,
-  with a BPM slider, tap tempo, accented down-beats and selectable time
-  signatures.
-- **Chords** — an interactive library of 16 common chords. Every card shows a
-  finger-by-finger diagram and can be tapped to hear it strummed (synthesised
-  with Web Audio).
-
-## Getting started
+## Rodando localmente
 
 ```bash
-npm install
-npm run dev      # start the dev server
-npm run build    # type-check + production build
-npm run preview  # preview the production build
+npm install                       # instala dependências
+cp .env.example .env               # configure DATABASE_URL e AUTH_SECRET
+npx prisma db push                 # cria as tabelas no seu Postgres
+npm run dev                        # http://localhost:3000
 ```
 
-> The tuner needs microphone permission and a secure context — that means
-> `localhost` during development or HTTPS in production.
+Você precisa de:
 
-## Project structure
+1. Um **Postgres** — crie grátis em [neon.tech](https://neon.tech) e cole a
+   connection string em `DATABASE_URL`.
+2. Um **AUTH_SECRET** — gere com `openssl rand -base64 32`.
+
+> O afinador precisa de permissão de microfone e contexto seguro (`localhost` no
+> dev, HTTPS em produção). Seu áudio nunca sai do dispositivo.
+
+## Deploy (Vercel + Neon)
+
+1. Importe o repositório na [Vercel](https://vercel.com).
+2. Em **Environment Variables**, adicione `DATABASE_URL` (do Neon) e `AUTH_SECRET`.
+3. A Vercel roda `npm run build` (que faz `prisma generate` + `next build`).
+4. Rode `npx prisma db push` uma vez apontando para o banco de produção.
+
+## Estrutura
 
 ```
+prisma/schema.prisma   modelo de dados
 src/
-  components/      Hero, Navbar, Toolkit shell, shader backdrop, shared UI
-  tools/           Learn path, Tuner, Metronome, Chords + their data
-  lib/             pitch detection, Web Audio synth, localStorage hook
-  state/           XP / streak / progress context
+  app/                 rotas (App Router): landing, login, onboarding, /app/*
+  components/          UI (shell, formulários, ferramentas, diagramas)
+  lib/                 instrumentos, currículo, pitch, áudio, datas, validação
+  server/              lógica de sessão, progresso e trilha (somente servidor)
+  auth.ts, auth.config.ts, middleware.ts   NextAuth v5
 ```
+
+## Roadmap
+
+| Fase | Conteúdo |
+| ---- | -------- |
+| **1 — Fundação** ✅ | Auth, onboarding, banco, currículo, gamificação, ferramentas, shell |
+| 2 — Currículo & Player | Player v2 (note highway, wait/timed, 5 coroas, loop A/B) |
+| 3 — Motor de áudio | pitchy/MPM em AudioWorklet, graders de afinação e tempo |
+| 4 — Visão | MediaPipe HandLandmarker, coach de postura, FretMapper |
+| 5 — Músicas | import (Songsterr/GP/MusicXML/MIDI), songbook |
+| 6 — IA & extras | lições adaptativas, glossário, conquistas, ouvido, compositor, casas mortas, PWA offline |

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -22,30 +23,28 @@ const variants: Record<Variant, { btn: string; circle: string }> = {
 
 interface Props {
   label: string;
-  onClick?: () => void;
+  href?: string;
   variant?: Variant;
   icon?: ReactNode;
   className?: string;
-  type?: "button" | "submit";
 }
 
 /**
- * Pill button with a vertical "text roll" on hover and an arrow that rotates
+ * Pill link with a vertical "text roll" on hover and an arrow that rotates
  * -45° — the signature interaction from the brief, restyled for Strum.
  */
 export default function TextRollButton({
   label,
-  onClick,
+  href = "#",
   variant = "cyprus",
   icon,
   className = "",
 }: Props) {
   const v = variants[variant];
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`group inline-flex items-center gap-3 rounded-full pl-5 sm:pl-6 pr-2 py-2 text-[13px] sm:text-[14px] font-medium transition-colors duration-500 ${EASE} ${v.btn} ${className}`}
+    <Link
+      href={href}
+      className={`group inline-flex items-center gap-3 rounded-full py-2 pl-5 pr-2 text-[13px] font-medium transition-colors duration-500 sm:pl-6 sm:text-[14px] ${EASE} ${v.btn} ${className}`}
     >
       <span className="flex h-[20px] flex-col overflow-hidden">
         <span
@@ -58,10 +57,10 @@ export default function TextRollButton({
         </span>
       </span>
       <span
-        className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full transition-transform duration-500 ${EASE} group-hover:-rotate-45 ${v.circle}`}
+        className={`flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-500 sm:h-8 sm:w-8 ${EASE} group-hover:-rotate-45 ${v.circle}`}
       >
         {icon ?? <ArrowRight size={16} strokeWidth={2.2} />}
       </span>
-    </button>
+    </Link>
   );
 }
