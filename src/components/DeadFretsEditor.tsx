@@ -93,7 +93,7 @@ export default function DeadFretsEditor({
       <div className="mt-4 flex items-center gap-3">
         <button
           onClick={save}
-          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35]"
+          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f]"
         >
           <Check size={16} />
           {saved === "saving" ? "Salvando…" : saved === "ok" ? "Salvo!" : "Salvar"}

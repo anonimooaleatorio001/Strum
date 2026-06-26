@@ -54,7 +54,7 @@ export default function SongImportForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-3 inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35] disabled:opacity-60"
+        className="mt-3 inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f] disabled:opacity-60"
       >
         <Upload size={16} />
         {pending ? "Importando…" : "Importar tablatura"}

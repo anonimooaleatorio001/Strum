@@ -64,7 +64,7 @@ export default async function SongsPage() {
               </div>
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-full bg-cyprus px-4 py-2 text-[13px] font-semibold text-sand transition-colors hover:bg-[#013a35]"
+                className="inline-flex items-center gap-1.5 rounded-full bg-cyprus px-4 py-2 text-[13px] font-semibold text-sand transition-colors hover:bg-[#11421f]"
               >
                 <Plus size={15} /> Adicionar
               </button>

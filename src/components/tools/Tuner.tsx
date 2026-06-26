@@ -121,7 +121,7 @@ export default function Tuner({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="rounded-3xl border border-cyprus/10 bg-sand p-6 shadow-[0_2px_30px_rgba(0,71,65,0.06)] sm:p-10">
+      <div className="rounded-3xl border border-cyprus/10 bg-sand p-6 shadow-[0_2px_30px_rgba(12,48,20,0.06)] sm:p-10">
         <div className="flex flex-col items-center">
           <div
             className={`flex h-32 w-32 items-center justify-center rounded-full border-2 transition-colors duration-300 sm:h-40 sm:w-40 ${
@@ -220,7 +220,7 @@ export default function Tuner({
             className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors duration-300 ${
               listening
                 ? "bg-cyprus/10 text-cyprus hover:bg-cyprus/15"
-                : "bg-cyprus text-sand hover:bg-[#013a35]"
+                : "bg-cyprus text-sand hover:bg-[#11421f]"
             }`}
           >
             {listening ? <MicOff size={16} /> : <Mic size={16} />}

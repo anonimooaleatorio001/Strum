@@ -55,9 +55,9 @@ export default function Chords() {
           <button
             key={chord.display}
             onClick={() => play(chord)}
-            className={`group flex flex-col items-center rounded-2xl border bg-sand p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,71,65,0.12)] ${
+            className={`group flex flex-col items-center rounded-2xl border bg-sand p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(12,48,20,0.12)] ${
               lastPlayed === chord.display
-                ? "border-cyprus shadow-[0_8px_24px_rgba(0,71,65,0.16)]"
+                ? "border-cyprus shadow-[0_8px_24px_rgba(12,48,20,0.16)]"
                 : "border-cyprus/10"
             }`}
           >

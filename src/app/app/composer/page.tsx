@@ -23,7 +23,7 @@ export default async function ComposerPage() {
       <form action={createComposition} className="mb-6">
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35]"
+          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f]"
         >
           <Plus size={18} /> Nova composição
         </button>

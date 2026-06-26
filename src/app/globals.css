@@ -4,17 +4,26 @@
 
 :root {
   color-scheme: light;
+  --forest: #18542a;
+  --forest-deep: #0c3014;
+  --cream: #f3e8cc;
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: #f0ede4;
-  color: #004741;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* page sits a touch deeper than cards (bg-sand) so cards lift slightly */
+  background-color: #efe6cf;
+  color: var(--forest);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
 }
 
 /* On-brand scrollbar */
@@ -26,72 +35,84 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 71, 65, 0.25);
+  background: rgba(24, 84, 42, 0.28);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 71, 65, 0.45);
+  background: rgba(24, 84, 42, 0.5);
   background-clip: padding-box;
 }
 
-/* Animations */
-@keyframes strum-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+/* ---- Liquid-glass card (CodeNest-style high-end border frame) ---- */
+.glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 24px 60px -28px rgba(12, 48, 20, 0.55);
 }
-@keyframes strum-pulse-ring {
-  0% {
-    transform: scale(0.95);
-    opacity: 0.7;
-  }
-  70% {
-    transform: scale(1.25);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1.25);
-    opacity: 0;
-  }
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.05)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
-@keyframes strum-pop {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.04);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+.glass-dark {
+  background: rgba(12, 48, 20, 0.55);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
 }
 
-.animate-float {
-  animation: strum-float 4s ease-in-out infinite;
+/* ---- Animations ---- */
+@keyframes strum-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
+@keyframes strum-pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  70% { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+@keyframes strum-pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-float { animation: strum-float 4s ease-in-out infinite; }
 .animate-pulse-ring {
   animation: strum-pulse-ring 2s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
 }
-.animate-pop {
-  animation: strum-pop 0.35s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+.animate-pop { animation: strum-pop 0.35s cubic-bezier(0.25, 0.1, 0.25, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-down,
+  .animate-hero-rise,
+  .animate-wave-drift,
+  .animate-float,
+  .animate-pulse-ring {
+    animation: none !important;
+  }
 }
 
 /* Hide scrollbar on horizontal scrollers */
-.scrollbar-none {
-  scrollbar-width: none;
-}
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
 
 /* Range slider thumb (metronome / speed) */
 .strum-range::-webkit-slider-thumb {
@@ -100,16 +121,16 @@ body {
   width: 22px;
   height: 22px;
   border-radius: 9999px;
-  background: #004741;
-  border: 3px solid #f0ede4;
-  box-shadow: 0 1px 6px rgba(0, 71, 65, 0.35);
+  background: var(--forest);
+  border: 3px solid var(--cream);
+  box-shadow: 0 1px 6px rgba(12, 48, 20, 0.4);
   cursor: pointer;
 }
 .strum-range::-moz-range-thumb {
   width: 18px;
   height: 18px;
   border-radius: 9999px;
-  background: #004741;
-  border: 3px solid #f0ede4;
+  background: var(--forest);
+  border: 3px solid var(--cream);
   cursor: pointer;
 }

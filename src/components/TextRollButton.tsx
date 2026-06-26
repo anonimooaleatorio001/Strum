@@ -8,7 +8,7 @@ const EASE = "ease-[cubic-bezier(0.25,0.1,0.25,1)]";
 
 const variants: Record<Variant, { btn: string; circle: string }> = {
   cyprus: {
-    btn: "bg-cyprus text-sand hover:bg-[#013a35]",
+    btn: "bg-cyprus text-sand hover:bg-[#11421f]",
     circle: "bg-sand text-cyprus",
   },
   sand: {

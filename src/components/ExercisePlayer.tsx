@@ -96,7 +96,7 @@ export default function ExercisePlayer({
         <button
           onClick={listen}
           disabled={playing}
-          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-medium text-sand transition-colors hover:bg-[#013a35] disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-medium text-sand transition-colors hover:bg-[#11421f] disabled:opacity-60"
         >
           {playing ? <Volume2 size={16} /> : <Play size={16} />}
           {playing ? "Tocando…" : "Ouvir"}

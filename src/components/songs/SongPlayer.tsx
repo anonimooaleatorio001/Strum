@@ -111,7 +111,7 @@ export default function SongPlayer({ notes, bpm, stringLabels }: Props) {
       <div className="mt-5 flex flex-wrap items-center gap-4">
         <button
           onClick={play}
-          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35]"
+          className="inline-flex items-center gap-2 rounded-full bg-cyprus px-5 py-2.5 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f]"
         >
           {playing ? <Square size={16} /> : <Play size={16} />}
           {playing ? "Parar" : "Tocar"}

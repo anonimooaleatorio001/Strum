@@ -106,7 +106,7 @@ export default function EarTrainer({ best }: { best: number }) {
       <div className="rounded-2xl border border-cyprus/10 bg-sand p-6 text-center">
         <button
           onClick={() => round && playRound(round)}
-          className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35]"
+          className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f]"
         >
           <Volume2 size={16} /> Ouvir de novo
         </button>

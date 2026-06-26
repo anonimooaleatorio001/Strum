@@ -136,7 +136,7 @@ export default function ChordDiagram({
                 x={x(s)}
                 y={cy + 3}
                 fontSize="8.5"
-                fill="#F0EDE4"
+                fill="#F3E8CC"
                 textAnchor="middle"
                 fontWeight={700}
               >

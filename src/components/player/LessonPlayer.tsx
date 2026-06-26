@@ -106,7 +106,7 @@ function ResultPanel({
             key={c}
             size={28}
             className={c <= summary.crown ? "text-ochre" : "text-cyprus/15"}
-            fill={c <= summary.crown ? "#C8893B" : "none"}
+            fill={c <= summary.crown ? "#f96015" : "none"}
           />
         ))}
       </div>
@@ -158,7 +158,7 @@ function ResultPanel({
         <button
           onClick={onContinue}
           disabled={pending}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35] disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f] disabled:opacity-60"
         >
           Continuar <ArrowRight size={16} />
         </button>

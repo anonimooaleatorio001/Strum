@@ -10,7 +10,7 @@ export default function LessonPath({ path }: { path: PathState }) {
     <div className="mx-auto max-w-2xl">
       {path.units.map((unit) => (
         <div key={unit.id} className="mb-4">
-          <div className="sticky top-[64px] z-10 mb-2 rounded-2xl bg-cyprus px-5 py-4 text-sand shadow-[0_4px_20px_rgba(0,71,65,0.18)]">
+          <div className="sticky top-[64px] z-10 mb-2 rounded-2xl bg-cyprus px-5 py-4 text-sand shadow-[0_4px_20px_rgba(12,48,20,0.18)]">
             <p className="text-[12px] font-medium uppercase tracking-wide text-sand/60">
               {unit.subtitle}
             </p>
@@ -40,11 +40,11 @@ export default function LessonPath({ path }: { path: PathState }) {
                         status.unlocked ? "hover:scale-105 active:scale-95" : ""
                       } ${
                         status.crown > 0
-                          ? "bg-cyprus text-sand shadow-[0_5px_0_#012e2a]"
+                          ? "bg-cyprus text-sand shadow-[0_5px_0_#0c3014]"
                           : isCurrent
-                          ? "bg-cyprus text-sand shadow-[0_5px_0_#012e2a]"
+                          ? "bg-cyprus text-sand shadow-[0_5px_0_#0c3014]"
                           : status.unlocked
-                          ? "bg-cyprus/15 text-cyprus shadow-[0_5px_0_rgba(0,71,65,0.18)]"
+                          ? "bg-cyprus/15 text-cyprus shadow-[0_5px_0_rgba(12,48,20,0.18)]"
                           : "bg-cyprus/10 text-cyprus/30"
                       }`}
                     >

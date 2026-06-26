@@ -35,7 +35,7 @@ function Toggle({
         type="checkbox"
         name={name}
         defaultChecked={defaultChecked}
-        className="mt-1 h-5 w-5 shrink-0 accent-[#004741]"
+        className="mt-1 h-5 w-5 shrink-0 accent-[#18542a]"
       />
     </label>
   );

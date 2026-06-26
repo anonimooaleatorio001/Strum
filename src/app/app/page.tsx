@@ -50,14 +50,14 @@ export default async function AppHome() {
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl border border-cyprus/10 bg-sand p-5">
           <div className="flex items-center gap-2 text-cyprus">
-            <Flame size={18} className="text-ochre" fill="#C8893B" />
+            <Flame size={18} className="text-ochre" fill="#f96015" />
             <span className="text-2xl font-semibold">{progress?.streak ?? 0}</span>
           </div>
           <p className="mt-1 text-[13px] text-cyprus/55">dias de streak</p>
         </div>
         <div className="rounded-2xl border border-cyprus/10 bg-sand p-5">
           <div className="flex items-center gap-2 text-cyprus">
-            <Zap size={18} className="text-ochre" fill="#C8893B" />
+            <Zap size={18} className="text-ochre" fill="#f96015" />
             <span className="text-2xl font-semibold">{progress?.xp ?? 0}</span>
           </div>
           <p className="mt-1 text-[13px] text-cyprus/55">XP total</p>

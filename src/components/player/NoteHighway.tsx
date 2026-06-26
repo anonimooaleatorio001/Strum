@@ -26,11 +26,11 @@ import type { TargetNote } from "@/lib/curriculum";
 
 const LEAD_SECONDS = 2.6; // how long a note takes to fall to the hit-line
 const COLORS = {
-  cyprus: "#004741",
-  sand: "#F0EDE4",
-  ochre: "#C8893B",
-  dim: "rgba(0,71,65,0.12)",
-  dimText: "rgba(0,71,65,0.45)",
+  cyprus: "#18542a",
+  sand: "#F3E8CC",
+  ochre: "#f96015",
+  dim: "rgba(12,48,20,0.12)",
+  dimText: "rgba(12,48,20,0.45)",
 };
 
 type Phase = "ready" | "countdown" | "playing" | "done";
@@ -230,7 +230,7 @@ export default function NoteHighway({
       fill = COLORS.dimText;
       alpha = 0.5;
     } else if (state === "current") fill = COLORS.ochre;
-    else fill = "rgba(0,71,65,0.78)";
+    else fill = "rgba(12,48,20,0.78)";
 
     ctx.globalAlpha = alpha;
     if (state === "hit") {
@@ -388,7 +388,7 @@ export default function NoteHighway({
       <div className="relative">
         <canvas
           ref={canvasRef}
-          className="h-[380px] w-full rounded-xl bg-[#fbfaf5]"
+          className="h-[380px] w-full rounded-xl bg-[#fbf6e9]"
         />
         {phase === "countdown" && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -398,7 +398,7 @@ export default function NoteHighway({
           </div>
         )}
         {phase === "ready" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl bg-[#fbfaf5]/80 backdrop-blur-sm">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl bg-[#fbf6e9]/80 backdrop-blur-sm">
             <Music2 size={32} className="text-cyprus/40" />
             <p className="max-w-xs text-center text-[13px] text-cyprus/60">
               Pegue seu instrumento. Toque cada nota quando ela cruzar a linha.
@@ -406,7 +406,7 @@ export default function NoteHighway({
             </p>
             <button
               onClick={start}
-              className="inline-flex items-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35]"
+              className="inline-flex items-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f]"
             >
               <Mic size={16} /> Tocar e ser avaliado
             </button>

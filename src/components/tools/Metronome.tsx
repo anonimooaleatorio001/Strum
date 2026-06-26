@@ -104,7 +104,7 @@ export default function Metronome() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="rounded-3xl border border-cyprus/10 bg-sand p-6 sm:p-10 shadow-[0_2px_30px_rgba(0,71,65,0.06)]">
+      <div className="rounded-3xl border border-cyprus/10 bg-sand p-6 sm:p-10 shadow-[0_2px_30px_rgba(12,48,20,0.06)]">
         {/* Beat indicator */}
         <div className="flex items-center justify-center gap-2.5 sm:gap-3">
           {Array.from({ length: beatsPerBar }).map((_, i) => {
@@ -189,7 +189,7 @@ export default function Metronome() {
         <div className="mt-8 flex items-center justify-center gap-4">
           <button
             onClick={toggle}
-            className="inline-flex items-center gap-2 rounded-full bg-cyprus px-8 py-3.5 text-sm font-medium text-sand transition-colors hover:bg-[#013a35]"
+            className="inline-flex items-center gap-2 rounded-full bg-cyprus px-8 py-3.5 text-sm font-medium text-sand transition-colors hover:bg-[#11421f]"
           >
             {playing ? <Pause size={18} /> : <Play size={18} />}
             {playing ? "Stop" : "Start"}

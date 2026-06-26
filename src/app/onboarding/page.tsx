@@ -11,7 +11,7 @@ export default async function OnboardingPage() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-sand px-5 py-10">
       <Logo size={40} />
-      <div className="mt-8 w-full max-w-md rounded-3xl border border-cyprus/10 bg-sand p-7 shadow-[0_2px_30px_rgba(0,71,65,0.06)] sm:p-8">
+      <div className="mt-8 w-full max-w-md rounded-3xl border border-cyprus/10 bg-sand p-7 shadow-[0_2px_30px_rgba(12,48,20,0.06)] sm:p-8">
         <h1 className="text-2xl font-semibold tracking-tight text-cyprus">
           Vamos preparar tudo{user.name ? `, ${user.name.split(" ")[0]}` : ""}!
         </h1>

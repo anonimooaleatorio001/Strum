@@ -71,7 +71,7 @@ export default function CameraPractice() {
             </p>
             <button
               onClick={start}
-              className="inline-flex items-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#013a35]"
+              className="inline-flex items-center gap-2 rounded-full bg-cyprus px-6 py-3 text-sm font-semibold text-sand transition-colors hover:bg-[#11421f]"
             >
               <Camera size={16} /> Ligar câmera
             </button>

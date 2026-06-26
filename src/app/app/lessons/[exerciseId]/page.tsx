@@ -45,7 +45,7 @@ export default async function ExercisePage({
         </h1>
         {status.crown > 0 && (
           <span className="inline-flex items-center gap-1 rounded-full bg-ochre/15 px-2.5 py-1 text-[11px] font-bold text-ochre">
-            <Crown size={12} fill="#C8893B" /> {status.crown}
+            <Crown size={12} fill="#f96015" /> {status.crown}
           </span>
         )}
       </div>
