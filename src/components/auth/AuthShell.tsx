@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import WaveField from "@/components/WaveField";
+import { ForestTrim } from "@/components/decor/Doodles";
 
 export default function AuthShell({
   title,
@@ -33,6 +34,7 @@ export default function AuthShell({
           <div className="mt-6">{children}</div>
         </div>
         <div className="mt-6 text-sm text-forest/70">{footer}</div>
+        <ForestTrim className="mt-8 opacity-50" />
       </div>
     </main>
   );

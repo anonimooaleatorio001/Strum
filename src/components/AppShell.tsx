@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { LogOut, PanelLeftClose, PanelLeft } from "lucide-react";
 import Logo from "@/components/Logo";
 import StatBadges from "@/components/StatBadges";
+import { ForestTrim } from "@/components/decor/Doodles";
 import { NAV, NAV_GROUPS } from "@/lib/nav";
 import { logout } from "@/app/actions/auth";
 
@@ -151,6 +152,7 @@ export default function AppShell({
 
         <main className="mx-auto max-w-[1100px] px-5 pb-28 pt-6 sm:px-8 md:pb-12">
           {children}
+          <ForestTrim className="mt-16 opacity-40" />
         </main>
       </div>
 

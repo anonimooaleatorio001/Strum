@@ -14,6 +14,7 @@ import {
 import Logo from "@/components/Logo";
 import WaveField from "@/components/WaveField";
 import TextRollButton from "@/components/TextRollButton";
+import { Mushroom, Fern, Sprout, ForestTrim } from "@/components/decor/Doodles";
 import { getCurrentUser } from "@/server/session";
 
 const FEATURES = [
@@ -104,7 +105,21 @@ export default async function LandingPage() {
         </header>
 
         {/* Hero */}
-        <section className="mx-auto flex max-w-[1200px] flex-col items-center px-5 pt-10 text-center sm:px-8 sm:pt-16">
+        <section className="relative mx-auto flex max-w-[1200px] flex-col items-center px-5 pt-10 text-center sm:px-8 sm:pt-16">
+          {/* subtle forest doodles (desktop only) */}
+          <Sprout
+            size={34}
+            className="absolute left-6 top-24 hidden opacity-70 lg:block"
+          />
+          <Fern
+            size={40}
+            className="absolute right-8 top-40 hidden opacity-60 lg:block"
+          />
+          <Mushroom
+            size={30}
+            className="absolute left-16 top-[22rem] hidden opacity-70 xl:block"
+          />
+
           {/* glass eyebrow badge */}
           <div className="animate-fade-up glass mb-7 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-wider text-forest">
             <Sparkles size={14} className="text-carrot" />
@@ -197,6 +212,9 @@ export default async function LandingPage() {
             ))}
           </div>
         </section>
+
+        {/* forest trim */}
+        <ForestTrim className="mb-2 mt-4" />
 
         {/* Footer */}
         <footer className="bg-forest-deep text-cream">
