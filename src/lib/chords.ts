@@ -47,6 +47,20 @@ export const CHORDS: Chord[] = [
   chord("C7", "C dominant 7th", "Dominant 7th", "Medium", [null, 3, 2, 3, 1, 0], [null, 3, 2, 4, 1, null], "Adds a bluesy tension to the C shape."),
   chord("F", "F major (barre)", "Barre", "Hard", [1, 3, 3, 2, 1, 1], [1, 3, 4, 2, 1, 1], "Barre the 1st fret with a firm, straight index finger."),
   chord("Bm", "B minor (barre)", "Barre", "Hard", [null, 2, 4, 4, 3, 2], [null, 1, 3, 4, 2, 1], "Barre the 2nd fret — keep the thumb behind the neck."),
+  chord("Em7", "E minor 7th", "Minor", "Easy", [0, 2, 2, 0, 3, 0], [null, 1, 2, null, 3, null], "Add the little finger to Em for a softer, jazzy colour."),
+  chord("Am7", "A minor 7th", "Minor", "Easy", [null, 0, 2, 0, 1, 0], [null, null, 2, null, 1, null], "Lift one finger off Am — open and mellow."),
+  chord("Cmaj7", "C major 7th", "Color", "Easy", [null, 3, 2, 0, 0, 0], [null, 3, 2, null, null, null], "Dreamy version of C — leave the high strings open."),
+  chord("Fmaj7", "F major 7th", "Color", "Medium", [null, null, 3, 2, 1, 0], [null, null, 3, 2, 1, null], "A friendlier F — no barre required."),
+  chord("Dm7", "D minor 7th", "Minor", "Medium", [null, null, 0, 2, 1, 1], [null, null, null, 3, 1, 1], "Small index barre across the top two strings."),
+  chord("Asus2", "A suspended 2nd", "Color", "Easy", [null, 0, 2, 2, 0, 0], [null, null, 1, 2, null, null], "Open and ringing — great between A and Asus4."),
+  chord("Asus4", "A suspended 4th", "Color", "Easy", [null, 0, 2, 2, 3, 0], [null, null, 1, 2, 3, null], "Wiggle to and from A for instant texture."),
+  chord("Dsus2", "D suspended 2nd", "Color", "Easy", [null, null, 0, 2, 3, 0], [null, null, null, 1, 3, null], "Lift the middle finger off D."),
+  chord("Dsus4", "D suspended 4th", "Color", "Easy", [null, null, 0, 2, 3, 3], [null, null, null, 1, 2, 3], "Add the little finger to D — classic folk move."),
+  chord("Esus4", "E suspended 4th", "Color", "Easy", [0, 2, 2, 2, 0, 0], [null, 1, 2, 3, null, null], "Tension that begs to resolve back to E."),
+  chord("G/B", "G over B", "Major", "Medium", [null, 2, 0, 0, 0, 3], [null, 1, null, null, null, 3], "A smooth bass walk from C to G."),
+  chord("E5", "E power chord", "Color", "Easy", [0, 2, 2, null, null, null], [null, 1, 2, null, null, null], "Two notes, all attitude — the rock staple."),
+  chord("A5", "A power chord", "Color", "Easy", [null, 0, 2, 2, null, null], [null, null, 1, 2, null, null], "Move this shape around for any power chord."),
+  chord("D5", "D power chord", "Color", "Easy", [null, null, 0, 2, 3, null], [null, null, null, 1, 2, null], "Crunchy and simple — palm-mute for punch."),
 ];
 
 export const CHORD_CATEGORIES: Chord["category"][] = [

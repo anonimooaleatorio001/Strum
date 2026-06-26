@@ -99,11 +99,83 @@ const UNIT_BLUEPRINT: { title: string; subtitle: string; skills: string[] }[] = 
 
 const EXERCISES_PER_SKILL = 2; // 6 units * 2 skills * 2 = 24 exercises per instrument
 
-/** Build a short, musical exercise on the lower frets for a given seed. */
+// --- curated content ------------------------------------------------------
+//
+// Real, musical exercises (scales, riffs, picking patterns) keyed by
+// `unit:skill:exercise`. Notes are [string, fret] pairs using only strings 0–3,
+// which exist on guitar and every bass, so one set works for both instruments
+// (it simply sounds an octave lower on bass). `[-1, -1]` marks a rest. `step`
+// is the spacing in beats (1 = quarter notes, 0.5 = eighths).
+
+interface Pattern {
+  step: number;
+  notes: [number, number][];
+}
+
+const R: [number, number] = [-1, -1]; // rest
+
+const CURATED: Record<string, Pattern> = {
+  // Unit 1 — Primeiros sons
+  "0:0:0": { step: 1, notes: [[0, 0], [1, 0], [2, 0], [3, 0], [3, 0], [2, 0], [1, 0], [0, 0]] },
+  "0:0:1": { step: 1, notes: [[0, 0], [2, 0], [1, 0], [3, 0], [2, 0], [0, 0], [3, 0], [1, 0]] },
+  "0:1:0": { step: 1, notes: [[0, 1], [0, 2], [0, 3], [0, 2], [1, 1], [1, 2], [1, 3], [1, 2]] },
+  "0:1:1": { step: 1, notes: [[1, 3], [1, 2], [1, 1], [2, 1], [2, 2], [2, 3], [2, 2], [2, 1]] },
+
+  // Unit 2 — Dó maior na corda / Trocando de corda (C major scale)
+  "1:0:0": { step: 0.5, notes: [[1, 3], [1, 5], [2, 2], [2, 3], [2, 5], [3, 2], [3, 4], [3, 5], [3, 4], [3, 2], [2, 5], [2, 3], [2, 2], [1, 5], [1, 3], [1, 3]] },
+  "1:0:1": { step: 0.5, notes: [[3, 5], [3, 4], [3, 2], [2, 5], [2, 3], [2, 2], [1, 5], [1, 3], [1, 5], [2, 2], [2, 3], [2, 5], [3, 2], [3, 4], [3, 5], [3, 5]] },
+  "1:1:0": { step: 0.5, notes: [[1, 3], [2, 3], [1, 5], [2, 5], [2, 2], [3, 2], [2, 3], [3, 4], [1, 3], [2, 3], [1, 5], [2, 5], [2, 2], [3, 2], [2, 0], [3, 0]] },
+  "1:1:1": { step: 0.5, notes: [[3, 2], [2, 2], [3, 4], [2, 3], [3, 5], [2, 5], [3, 2], [2, 2], [1, 3], [0, 3], [1, 5], [0, 5], [1, 3], [0, 3], [1, 0], [0, 0]] },
+
+  // Unit 3 — Ritmo básico
+  "2:0:0": { step: 1, notes: [[1, 3], [2, 0], [2, 2], [3, 0], [1, 3], [2, 2], [2, 0], [1, 3]] },
+  "2:0:1": { step: 1, notes: [[0, 3], [1, 0], [1, 2], [2, 0], [2, 2], [1, 2], [1, 0], [0, 3]] },
+  "2:1:0": { step: 0.5, notes: [[1, 3], [1, 3], [2, 0], [2, 0], [2, 2], [2, 2], [3, 0], [3, 0], [1, 3], [2, 0], [2, 2], [3, 0], [2, 2], [2, 0], [1, 3], [1, 3]] },
+  "2:1:1": { step: 0.5, notes: [[0, 0], [0, 0], [1, 0], [1, 0], [2, 0], [2, 0], [1, 0], [1, 0], [0, 0], [1, 0], [2, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 0]] },
+
+  // Unit 4 — Escala de Sol / Padrões (G major scale)
+  "3:0:0": { step: 0.5, notes: [[0, 3], [0, 5], [1, 2], [1, 3], [1, 5], [2, 2], [2, 4], [2, 5], [2, 4], [2, 2], [1, 5], [1, 3], [1, 2], [0, 5], [0, 3], [0, 3]] },
+  "3:0:1": { step: 0.5, notes: [[2, 5], [2, 4], [2, 2], [1, 5], [1, 3], [1, 2], [0, 5], [0, 3], [0, 5], [1, 2], [1, 3], [1, 5], [2, 2], [2, 4], [2, 5], [2, 5]] },
+  "3:1:0": { step: 0.5, notes: [[0, 3], [1, 2], [0, 5], [1, 3], [1, 2], [1, 5], [1, 3], [2, 2], [1, 5], [2, 4], [2, 2], [2, 5], [2, 4], [3, 0], [2, 5], [2, 5]] },
+  "3:1:1": { step: 0.5, notes: [[0, 3], [0, 5], [0, 3], [1, 2], [1, 3], [1, 2], [1, 5], [1, 3], [2, 2], [2, 4], [2, 2], [1, 5], [1, 3], [0, 5], [0, 3], [0, 3]] },
+
+  // Unit 5 — Groove (with rests / syncopation)
+  "4:0:0": { step: 0.5, notes: [[1, 3], R, [2, 2], R, [2, 0], [2, 2], R, [1, 3], [1, 3], R, [2, 2], R, [2, 0], [2, 2], R, [1, 3]] },
+  "4:0:1": { step: 0.5, notes: [[0, 3], R, [1, 0], [1, 2], R, [1, 2], [1, 0], R, [0, 3], R, [1, 0], [1, 2], R, [2, 0], R, [1, 0]] },
+  "4:1:0": { step: 0.5, notes: [[1, 3], R, [1, 3], [2, 2], R, [2, 2], [2, 0], R, [1, 3], R, [1, 3], [2, 2], R, [2, 0], [2, 2], R] },
+  "4:1:1": { step: 0.5, notes: [[2, 0], R, [2, 2], [2, 0], R, [3, 0], [2, 2], R, [2, 0], R, [2, 2], [2, 0], R, [1, 3], R, [1, 3]] },
+
+  // Unit 6 — Desafio
+  "5:0:0": { step: 0.5, notes: [[1, 3], [2, 0], [2, 2], [3, 0], [3, 2], [2, 3], [2, 0], [1, 3], [1, 5], [2, 3], [2, 2], [2, 0], [1, 3], [1, 2], [1, 0], [0, 3]] },
+  "5:0:1": { step: 0.5, notes: [[0, 3], [1, 0], [1, 2], [2, 0], [2, 2], [3, 0], [3, 2], [2, 3], [3, 2], [3, 0], [2, 2], [2, 0], [1, 2], [1, 0], [0, 3], [0, 3]] },
+  "5:1:0": { step: 0.5, notes: [[0, 3], [0, 5], [1, 2], [1, 3], [1, 5], [2, 2], [2, 4], [2, 5], [2, 4], [2, 2], [1, 5], [1, 3], [1, 2], [0, 5], [0, 3], [0, 5]] },
+  "5:1:1": { step: 0.5, notes: [[2, 5], [2, 4], [2, 2], [1, 5], [1, 3], [1, 2], [0, 5], [0, 3], [1, 2], [1, 5], [2, 2], [2, 5], [3, 2], [3, 4], [3, 5], [3, 5]] },
+};
+
+function patternToNotes(pat: Pattern, strings: StringDef[]): TargetNote[] {
+  const out: TargetNote[] = [];
+  let beat = 0;
+  for (const [s, f] of pat.notes) {
+    if (s >= 0 && s < strings.length) {
+      out.push({
+        string: s,
+        fret: f,
+        midi: strings[s].midi + f,
+        beat: Math.round(beat * 100) / 100,
+      });
+    }
+    beat += pat.step;
+  }
+  return out;
+}
+
+/** Build a short, musical exercise — curated when available, else generated. */
 function buildExercise(
   rng: () => number,
   strings: StringDef[],
   unitIndex: number,
+  skillIndex: number,
+  exerciseIndex: number,
   id: string,
   skillId: string,
   title: string
@@ -112,13 +184,17 @@ function buildExercise(
   const beatsPerBar = 4;
   const totalBeats = bars * beatsPerBar;
   const bpm = 60 + unitIndex * 8; // gets faster deeper in the course
-  const maxFret = Math.min(2 + unitIndex, 5);
 
+  const curated = CURATED[`${unitIndex}:${skillIndex}:${exerciseIndex}`];
+  if (curated) {
+    return { id, skillId, title, bpm, bars, notes: patternToNotes(curated, strings) };
+  }
+
+  // Fallback: procedural generation (kept for safety).
+  const maxFret = Math.min(2 + unitIndex, 5);
   const notes: TargetNote[] = [];
-  // density grows with unit: unit 0 quarter notes, later add some eighths
   const step = unitIndex >= 2 ? 0.5 : 1;
   for (let beat = 0; beat < totalBeats; beat += step) {
-    // occasional rest deeper in the course
     if (unitIndex >= 4 && rng() < 0.2) continue;
     const string = Math.floor(rng() * strings.length);
     const fret = Math.floor(rng() * (maxFret + 1));
@@ -129,13 +205,11 @@ function buildExercise(
       beat: Math.round(beat * 100) / 100,
     });
   }
-  // guarantee at least 4 notes
   if (notes.length < 4) {
     for (let i = notes.length; i < 4; i++) {
       notes.push({ string: 0, fret: 0, midi: strings[0].midi, beat: i });
     }
   }
-
   return { id, skillId, title, bpm, bars, notes };
 }
 
@@ -165,6 +239,8 @@ export function buildCurriculum(
             rng,
             strings,
             ui,
+            si,
+            ei,
             exId,
             skillId,
             `${skillTitle} ${ei + 1}`
