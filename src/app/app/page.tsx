@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { Flame, Zap, Target, Play, Gauge, Timer, Music } from "lucide-react";
+import { Flame, Zap, Target, Play, Gauge, Timer, Music, Sparkles } from "lucide-react";
+import CoachCard from "@/components/CoachCard";
 import { requireOnboardedUser } from "@/server/session";
 import { getPathState } from "@/server/path";
+import { getSkillStrengths } from "@/server/skills";
+import { localCoachTip } from "@/server/adaptive";
 import { findExercise } from "@/lib/curriculum";
 import { todayKey } from "@/lib/dates";
 
@@ -23,6 +26,15 @@ export default async function AppHome() {
   const todays = path.currentId
     ? findExercise(user.instrument, user.numStrings, path.currentId)
     : null;
+
+  const strengths = await getSkillStrengths(user.id);
+  const strengthValues = Object.values(strengths);
+  const initialTip = localCoachTip({
+    streak: progress?.streak ?? 0,
+    dailyXp,
+    dailyGoalXp: goal,
+    weakestStrength: strengthValues.length ? Math.min(...strengthValues) : 1,
+  });
 
   return (
     <div>
@@ -105,6 +117,30 @@ export default async function AppHome() {
           </>
         )}
       </div>
+
+      {/* Coach tip */}
+      <div className="mt-6">
+        <CoachCard initialTip={initialTip} />
+      </div>
+
+      {/* Adaptive review */}
+      <Link
+        href="/app/review"
+        className="mt-6 flex items-center justify-between rounded-2xl border border-cyprus/10 bg-sand p-5 transition-colors hover:border-cyprus/30"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyprus/8 text-cyprus">
+            <Sparkles size={18} />
+          </span>
+          <div>
+            <h3 className="font-semibold text-cyprus">Revisão adaptativa</h3>
+            <p className="text-[13px] text-cyprus/55">
+              Pratique o que mais precisa, escolhido para você.
+            </p>
+          </div>
+        </div>
+        <Play size={18} className="text-cyprus/40" />
+      </Link>
 
       {/* Quick tools */}
       <div className="mt-6 grid grid-cols-3 gap-3">
