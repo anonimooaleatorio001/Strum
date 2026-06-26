@@ -1,12 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: "Strum · Aprenda violão e baixo do jeito divertido",
   description:
     "Strum — um treinador de violão e baixo no estilo Duolingo: trilha de lições, afinador, metrônomo e biblioteca de acordes, tudo em um lugar.",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/favicon.svg" },
+  appleWebApp: { capable: true, title: "Strum", statusBarStyle: "default" },
+  icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
 };
 
 export const viewport: Viewport = {
@@ -23,7 +25,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

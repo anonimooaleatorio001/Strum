@@ -1,7 +1,9 @@
 import { Settings } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import SettingsForm, { type SettingsValues } from "@/components/SettingsForm";
+import DeadFretsEditor from "@/components/DeadFretsEditor";
 import { requireOnboardedUser } from "@/server/session";
+import { getTuning, type DeadFrets } from "@/lib/instruments";
 
 export default async function SettingsPage() {
   const user = await requireOnboardedUser();
@@ -15,6 +17,9 @@ export default async function SettingsPage() {
     camera: s.camera ?? false,
   };
 
+  const tuning = getTuning(user.instrument, user.numStrings);
+  const deadFrets = (user.deadFrets as DeadFrets | null) ?? {};
+
   return (
     <div>
       <PageHeader
@@ -22,7 +27,13 @@ export default async function SettingsPage() {
         title="Configurações"
         subtitle="Ajuste sua meta diária e como as lições funcionam."
       />
-      <SettingsForm initial={initial} />
+      <div className="space-y-6">
+        <SettingsForm initial={initial} />
+        <DeadFretsEditor
+          stringLabels={tuning.map((t) => t.label)}
+          initial={deadFrets}
+        />
+      </div>
     </div>
   );
 }
