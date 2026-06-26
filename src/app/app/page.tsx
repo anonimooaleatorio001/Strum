@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { Flame, Zap, Target, Play, Gauge, Timer, Music, Sparkles } from "lucide-react";
+import {
+  Play,
+  Gauge,
+  Timer,
+  Music,
+  Sparkles,
+  GraduationCap,
+  ArrowRight,
+} from "lucide-react";
 import CoachCard from "@/components/CoachCard";
 import { requireOnboardedUser } from "@/server/session";
 import { getPathState } from "@/server/path";
@@ -8,7 +16,9 @@ import { localCoachTip } from "@/server/adaptive";
 import { findExercise } from "@/lib/curriculum";
 import { todayKey } from "@/lib/dates";
 
-const QUICK = [
+const SHORTCUTS = [
+  { href: "/app/review", label: "Revisão", icon: Sparkles },
+  { href: "/app/lessons", label: "Trilha", icon: GraduationCap },
   { href: "/app/tuner", label: "Afinador", icon: Gauge },
   { href: "/app/metronome", label: "Metrônomo", icon: Timer },
   { href: "/app/chords", label: "Acordes", icon: Music },
@@ -37,126 +47,90 @@ export default async function AppHome() {
   });
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-cyprus sm:text-3xl">
-        Bom te ver de novo{user.name ? `, ${user.name.split(" ")[0]}` : ""}!
-      </h1>
-      <p className="mt-1 text-[14px] text-cyprus/60">
-        {user.instrument === "BASS" ? "Baixo" : "Violão/Guitarra"} ·{" "}
-        {user.numStrings} cordas
-      </p>
+    <div className="mx-auto max-w-2xl">
+      {/* greeting */}
+      <div className="animate-fade-up flex items-end justify-between">
+        <div>
+          <h1 className="font-display text-xl font-extrabold tracking-tight text-forest sm:text-2xl">
+            Olá{user.name ? `, ${user.name.split(" ")[0]}` : ""}
+          </h1>
+          <p className="text-[13px] text-forest/55">
+            {user.instrument === "BASS" ? "Baixo" : "Violão"} ·{" "}
+            {path.doneCount}/{path.totalExercises} lições
+          </p>
+        </div>
+        <span className="text-[13px] font-semibold text-forest/45">
+          {goalPct}% da meta
+        </span>
+      </div>
 
-      {/* Stat cards */}
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-cyprus/10 bg-sand p-5">
-          <div className="flex items-center gap-2 text-cyprus">
-            <Flame size={18} className="text-ochre" fill="#f96015" />
-            <span className="text-2xl font-semibold">{progress?.streak ?? 0}</span>
+      {/* lesson of the day — the one hero action */}
+      <div className="animate-fade-up mt-4 overflow-hidden rounded-3xl bg-forest text-cream [animation-delay:80ms]">
+        <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium uppercase tracking-wider text-cream/50">
+              {todays ? "Lição de hoje" : "Tudo em dia 🎉"}
+            </p>
+            <h2 className="font-display mt-0.5 truncate text-lg font-bold sm:text-xl">
+              {todays ? todays.title : "Você completou a trilha"}
+            </h2>
+            <p className="mt-0.5 text-[13px] text-cream/65">
+              {todays
+                ? `${todays.notes.length} notas · ${todays.bpm} BPM`
+                : "Volte amanhã para manter a ofensiva"}
+            </p>
           </div>
-          <p className="mt-1 text-[13px] text-cyprus/55">dias de streak</p>
+          <Link
+            href={todays ? `/app/lessons/${todays.id}` : "/app/lessons"}
+            aria-label={todays ? "Começar lição" : "Ver trilha"}
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sunshine text-forest-deep transition-transform hover:scale-105 active:scale-95"
+          >
+            <Play size={20} strokeWidth={2.4} className="ml-0.5" />
+          </Link>
         </div>
-        <div className="rounded-2xl border border-cyprus/10 bg-sand p-5">
-          <div className="flex items-center gap-2 text-cyprus">
-            <Zap size={18} className="text-ochre" fill="#f96015" />
-            <span className="text-2xl font-semibold">{progress?.xp ?? 0}</span>
-          </div>
-          <p className="mt-1 text-[13px] text-cyprus/55">XP total</p>
-        </div>
-        <div className="rounded-2xl border border-cyprus/10 bg-sand p-5">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-cyprus">
-              <Target size={15} /> Meta de hoje
-            </span>
-            <span className="text-[13px] font-medium text-cyprus/55">
+        {/* slim daily-goal bar */}
+        <div className="px-5 pb-4 sm:px-6">
+          <div className="mb-1 flex items-center justify-between text-[11px] text-cream/55">
+            <span>Meta de hoje</span>
+            <span>
               {dailyXp}/{goal} XP
             </span>
           </div>
-          <div className="h-2.5 overflow-hidden rounded-full bg-cyprus/10">
+          <div className="h-1.5 overflow-hidden rounded-full bg-cream/15">
             <div
-              className="h-full rounded-full bg-ochre transition-all duration-500"
+              className="h-full rounded-full bg-sunshine transition-all duration-700"
               style={{ width: `${goalPct}%` }}
             />
           </div>
         </div>
       </div>
 
-      {/* Lesson of the day */}
-      <div className="mt-6 overflow-hidden rounded-2xl bg-cyprus p-6 text-sand sm:p-8">
-        <p className="text-[12px] font-medium uppercase tracking-wide text-sand/60">
-          Lição de hoje
-        </p>
-        {todays ? (
-          <>
-            <h2 className="mt-1 text-xl font-semibold sm:text-2xl">
-              {todays.title}
-            </h2>
-            <p className="mt-1 text-[14px] text-sand/70">
-              {todays.notes.length} notas · {todays.bpm} BPM
-            </p>
-            <Link
-              href={`/app/lessons/${todays.id}`}
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-sand px-6 py-3 text-sm font-semibold text-cyprus transition-transform hover:scale-[1.02]"
-            >
-              <Play size={16} strokeWidth={2.4} /> Começar
-            </Link>
-          </>
-        ) : (
-          <>
-            <h2 className="mt-1 text-xl font-semibold sm:text-2xl">
-              Você completou tudo! 🎉
-            </h2>
-            <p className="mt-1 text-[14px] text-sand/70">
-              Volte amanhã para manter o streak ou revise uma lição.
-            </p>
-            <Link
-              href="/app/lessons"
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-sand px-6 py-3 text-sm font-semibold text-cyprus"
-            >
-              Ver trilha
-            </Link>
-          </>
-        )}
-      </div>
-
-      {/* Coach tip */}
-      <div className="mt-6">
+      {/* coach tip — slim line */}
+      <div className="animate-fade-up mt-3 [animation-delay:160ms]">
         <CoachCard initialTip={initialTip} />
       </div>
 
-      {/* Adaptive review */}
-      <Link
-        href="/app/review"
-        className="mt-6 flex items-center justify-between rounded-2xl border border-cyprus/10 bg-sand p-5 transition-colors hover:border-cyprus/30"
-      >
-        <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyprus/8 text-cyprus">
-            <Sparkles size={18} />
-          </span>
-          <div>
-            <h3 className="font-semibold text-cyprus">Revisão adaptativa</h3>
-            <p className="text-[13px] text-cyprus/55">
-              Pratique o que mais precisa, escolhido para você.
-            </p>
-          </div>
-        </div>
-        <Play size={18} className="text-cyprus/40" />
-      </Link>
-
-      {/* Quick tools */}
-      <div className="mt-6 grid grid-cols-3 gap-3">
-        {QUICK.map((q) => {
-          const Icon = q.icon;
+      {/* shortcuts — compact chips */}
+      <div className="animate-fade-up mt-4 flex flex-wrap gap-2 [animation-delay:240ms]">
+        {SHORTCUTS.map((s) => {
+          const Icon = s.icon;
           return (
             <Link
-              key={q.href}
-              href={q.href}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-cyprus/10 bg-sand p-5 text-cyprus transition-colors hover:bg-cyprus/[0.03]"
+              key={s.href}
+              href={s.href}
+              className="inline-flex items-center gap-2 rounded-full border border-forest/12 bg-cream px-4 py-2 text-[13px] font-medium text-forest/80 transition-colors hover:border-forest/30 hover:text-forest"
             >
-              <Icon size={22} />
-              <span className="text-[13px] font-medium">{q.label}</span>
+              <Icon size={15} />
+              {s.label}
             </Link>
           );
         })}
+        <Link
+          href="/app/songs"
+          className="inline-flex items-center gap-1.5 rounded-full bg-forest/8 px-4 py-2 text-[13px] font-medium text-forest transition-colors hover:bg-forest/15"
+        >
+          Mais <ArrowRight size={14} />
+        </Link>
       </div>
     </div>
   );

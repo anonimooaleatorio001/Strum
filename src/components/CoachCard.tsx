@@ -28,23 +28,18 @@ export default function CoachCard({ initialTip }: { initialTip: string }) {
   }, []);
 
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-ochre/25 bg-ochre/[0.07] p-5">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ochre text-sand">
-        <Sparkles size={18} />
-      </span>
-      <div className="flex-1">
-        <p className="text-[12px] font-semibold uppercase tracking-wide text-ochre">
-          Dica do Strum
-        </p>
-        <p className="mt-1 text-[14px] leading-relaxed text-cyprus/80">{tip}</p>
-      </div>
+    <div className="flex items-center gap-2.5 rounded-full border border-forest/10 bg-cream px-4 py-2.5">
+      <Sparkles size={15} className="shrink-0 text-carrot" />
+      <p className="flex-1 truncate text-[13px] text-forest/75" title={tip}>
+        {tip}
+      </p>
       <button
         onClick={refresh}
         disabled={loading}
         aria-label="Nova dica"
-        className="shrink-0 text-cyprus/40 transition-colors hover:text-cyprus disabled:opacity-50"
+        className="shrink-0 text-forest/35 transition-colors hover:text-forest disabled:opacity-50"
       >
-        <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+        <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
       </button>
     </div>
   );
