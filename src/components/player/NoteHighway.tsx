@@ -22,6 +22,7 @@ import {
   type GradeSummary,
 } from "@/lib/grading";
 import { noteName } from "@/lib/pitch";
+import { toast } from "@/lib/toast";
 import type { TargetNote } from "@/lib/curriculum";
 
 const LEAD_SECONDS = 2.6; // how long a note takes to fall to the hit-line
@@ -41,6 +42,7 @@ interface Props {
   stringLabels: string[]; // low -> high
   waitMode: boolean;
   title: string;
+  lefty?: boolean;
   onComplete: (s: GradeSummary) => void;
 }
 
@@ -50,6 +52,7 @@ export default function NoteHighway({
   stringLabels,
   waitMode: waitModeInitial,
   title,
+  lefty = false,
   onComplete,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -115,7 +118,8 @@ export default function NoteHighway({
       ctx.fillStyle = COLORS.dimText;
       ctx.font = "600 12px system-ui, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(stringLabels[i][0], x, cssH - 16);
+      const labelString = lefty ? lanes - 1 - i : i;
+      ctx.fillText(stringLabels[labelString][0], x, cssH - 16);
     }
 
     // hit-line
@@ -157,7 +161,7 @@ export default function NoteHighway({
 
     rafRef.current = requestAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bpm, guide, stringLabels, waitMode]);
+  }, [bpm, guide, stringLabels, waitMode, lefty]);
 
   // ---- timed-mode drawing -----------------------------------------------
   function drawTimed(
@@ -167,7 +171,8 @@ export default function NoteHighway({
     notes.forEach((n, i) => {
       const progress = (g.now - (g.times[i] - LEAD_SECONDS)) / LEAD_SECONDS;
       if (progress < -0.1 || progress > 1.4) return;
-      const x = n.string * g.laneW + g.laneW / 2;
+      const lane = lefty ? g.lanes - 1 - n.string : n.string;
+      const x = lane * g.laneW + g.laneW / 2;
       const y = progress * g.hitY;
       const r = resultsRef.current[i];
       drawNote(ctx, x, y, g.noteR, n.fret, r?.hit ? "hit" : progress > 1 ? "missed" : "pending");
@@ -185,7 +190,8 @@ export default function NoteHighway({
       const rel = i - idx; // 0 = current note sitting on the line
       const y = g.hitY - rel * 64;
       if (y < -30 || y > g.hitY + 30) return;
-      const x = n.string * g.laneW + g.laneW / 2;
+      const lane = lefty ? g.lanes - 1 - n.string : n.string;
+      const x = lane * g.laneW + g.laneW / 2;
       const r = resultsRef.current[i];
       const state = r?.hit ? "hit" : rel === 0 ? "current" : "pending";
       drawNote(ctx, x, y, g.noteR, n.fret, state);
@@ -207,6 +213,7 @@ export default function NoteHighway({
         lane = n.string;
       }
     });
+    if (lefty) lane = lanes - 1 - lane;
     const x = lane * laneW + laneW / 2;
     const inTune = Math.abs(liveRef.current.cents) < 18;
     ctx.fillStyle = inTune ? COLORS.cyprus : COLORS.ochre;
@@ -336,8 +343,9 @@ export default function NoteHighway({
       // No mic permission: fall back to a "listen & self-mark" run is handled
       // by the parent; here we just surface the failure via an empty grade.
       setPhase("ready");
-      alert(
-        "Não consegui acessar o microfone. Permita o acesso para tocar e ser avaliado."
+      toast(
+        "Não consegui acessar o microfone. Permita o acesso para tocar e ser avaliado.",
+        "error"
       );
       return;
     }

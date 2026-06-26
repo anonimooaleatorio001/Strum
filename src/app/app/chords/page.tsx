@@ -1,8 +1,12 @@
 import { Music } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Chords from "@/components/tools/Chords";
+import { getCurrentUser } from "@/server/session";
 
-export default function ChordsPage() {
+export default async function ChordsPage() {
+  const user = await getCurrentUser();
+  const lefty = user?.handedness === "LEFT";
+
   return (
     <div>
       <PageHeader
@@ -10,7 +14,7 @@ export default function ChordsPage() {
         title="Acordes"
         subtitle="Uma biblioteca interativa de acordes — toque em qualquer um para ouvir."
       />
-      <Chords />
+      <Chords lefty={lefty} />
     </div>
   );
 }

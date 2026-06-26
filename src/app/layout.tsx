@@ -1,14 +1,30 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import Toaster from "@/components/Toaster";
+
+const DESCRIPTION =
+  "Strum — um treinador de violão e baixo no estilo Duolingo: trilha de lições que te escuta tocar, afinador, metrônomo, músicas e muito mais.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://strum-8pte.vercel.app"),
   title: "Strum · Aprenda violão e baixo do jeito divertido",
-  description:
-    "Strum — um treinador de violão e baixo no estilo Duolingo: trilha de lições, afinador, metrônomo e biblioteca de acordes, tudo em um lugar.",
+  description: DESCRIPTION,
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Strum", statusBarStyle: "default" },
   icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
+  openGraph: {
+    title: "Strum · Aprenda violão e baixo do jeito divertido",
+    description: DESCRIPTION,
+    type: "website",
+    locale: "pt_BR",
+    siteName: "Strum",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Strum · Aprenda violão e baixo",
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {
@@ -39,6 +55,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        <Toaster />
         <ServiceWorkerRegister />
       </body>
     </html>

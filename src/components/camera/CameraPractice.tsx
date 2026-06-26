@@ -12,7 +12,7 @@ import { CHORDS } from "@/lib/chords";
  * placement against the target in real time. (Hand-tracking detection is a
  * future upgrade; this works fully offline and on every device today.)
  */
-export default function CameraPractice() {
+export default function CameraPractice({ lefty = false }: { lefty?: boolean }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [on, setOn] = useState(false);
@@ -86,7 +86,7 @@ export default function CameraPractice() {
             <p className="mb-1 text-center text-sm font-bold text-cyprus">
               {chord.display}
             </p>
-            <ChordDiagram frets={chord.frets} fingers={chord.fingers} size={0.95} />
+            <ChordDiagram frets={chord.frets} fingers={chord.fingers} size={0.95} lefty={lefty} />
           </div>
         )}
       </div>

@@ -16,6 +16,7 @@ interface Props {
   stringLabels: string[];
   waitMode: boolean;
   bestCrown: number;
+  lefty?: boolean;
 }
 
 export default function LessonPlayer({
@@ -26,6 +27,7 @@ export default function LessonPlayer({
   stringLabels,
   waitMode,
   bestCrown,
+  lefty = false,
 }: Props) {
   const router = useRouter();
   const [summary, setSummary] = useState<GradeSummary | null>(null);
@@ -73,6 +75,7 @@ export default function LessonPlayer({
       stringLabels={stringLabels}
       waitMode={waitMode}
       title={title}
+      lefty={lefty}
       onComplete={handleComplete}
     />
   );

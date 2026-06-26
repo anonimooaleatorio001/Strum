@@ -62,6 +62,7 @@ export default async function ExercisePage({
         stringLabels={stringLabels}
         waitMode={Boolean(settings.waitMode)}
         bestCrown={status.crown}
+        lefty={user.handedness === "LEFT"}
       />
 
       <details className="mt-6 rounded-2xl border border-cyprus/10 bg-sand">

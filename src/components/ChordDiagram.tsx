@@ -5,17 +5,21 @@ interface Props {
   fingers?: (number | null)[];
   size?: number;
   showFingers?: boolean;
+  /** Mirror the fretboard for left-handed players. */
+  lefty?: boolean;
 }
 
 /**
  * Six-string chord diagram. Auto-windows to barre chords above the nut and
- * draws open (○) / muted (×) markers above each string.
+ * draws open (○) / muted (×) markers above each string. Mirrors horizontally
+ * for left-handed players.
  */
 export default function ChordDiagram({
   frets,
   fingers = [],
   size = 1,
   showFingers = true,
+  lefty = false,
 }: Props) {
   const stringGap = 16;
   const fretGap = 22;
@@ -31,7 +35,7 @@ export default function ChordDiagram({
   const windowStart = minFret > 1 ? minFret : 1;
   const showNut = windowStart === 1;
 
-  const x = (s: number) => padX + s * stringGap;
+  const x = (s: number) => padX + (lefty ? 5 - s : s) * stringGap;
   const yFretLine = (f: number) => padTop + f * fretGap;
 
   return (

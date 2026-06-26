@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Play, Square, Save, Trash2, Plus, Minus } from "lucide-react";
 import { getAudioContext, playNote, playClick } from "@/lib/audio";
 import { saveComposition, deleteComposition } from "@/app/actions/composer";
+import { toast } from "@/lib/toast";
 
 type Cell = number | null;
 
@@ -99,7 +100,12 @@ export default function ComposerEditor(props: Props) {
       grid,
     });
     setSaved(res?.ok ? "ok" : "idle");
-    if (res?.ok) setTimeout(() => setSaved("idle"), 1500);
+    if (res?.ok) {
+      toast("Composição salva!", "success");
+      setTimeout(() => setSaved("idle"), 1500);
+    } else {
+      toast(res?.error ?? "Não foi possível salvar.", "error");
+    }
   }
 
   const rows = props.stringLabels.length;

@@ -14,7 +14,7 @@ const difficultyStyle: Record<Chord["difficulty"], string> = {
   Hard: "bg-cyprus text-sand",
 };
 
-export default function Chords() {
+export default function Chords({ lefty = false }: { lefty?: boolean }) {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const [lastPlayed, setLastPlayed] = useState<string | null>(null);
 
@@ -75,7 +75,7 @@ export default function Chords() {
             </div>
 
             <div className="my-3 flex justify-center">
-              <ChordDiagram frets={chord.frets} fingers={chord.fingers} />
+              <ChordDiagram frets={chord.frets} fingers={chord.fingers} lefty={lefty} />
             </div>
 
             <div className="flex w-full items-center justify-between">
@@ -95,8 +95,8 @@ export default function Chords() {
       </div>
 
       <p className="mt-6 text-center text-[12px] text-cyprus/45">
-        Tap any chord to hear it strummed. Diagrams read low E (left) to high E
-        (right); numbers show suggested fingers.
+        Toque em qualquer acorde para ouvi-lo. Os diagramas vão da corda mais
+        grave à mais aguda{lefty ? " (canhoto)" : ""}; os números mostram os dedos.
       </p>
     </div>
   );

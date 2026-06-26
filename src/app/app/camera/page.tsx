@@ -4,7 +4,7 @@ import CameraPractice from "@/components/camera/CameraPractice";
 import { requireOnboardedUser } from "@/server/session";
 
 export default async function CameraPage() {
-  await requireOnboardedUser();
+  const user = await requireOnboardedUser();
   return (
     <div>
       <PageHeader
@@ -12,7 +12,7 @@ export default async function CameraPage() {
         title="Câmera"
         subtitle="Pratique acordes vendo suas mãos com a forma de referência sobreposta. Tudo roda no seu aparelho."
       />
-      <CameraPractice />
+      <CameraPractice lefty={user.handedness === "LEFT"} />
     </div>
   );
 }
