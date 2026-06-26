@@ -55,6 +55,58 @@ export function getTuning(instrument: InstrumentId, numStrings: number): StringD
   return def.tunings[numStrings] ?? def.tunings[def.defaultStrings];
 }
 
+/** Map of string index -> list of dead/buzzing frets to avoid. */
+export type DeadFrets = Record<string, number[]>;
+
+export function isDeadFret(
+  dead: DeadFrets | null | undefined,
+  stringIdx: number,
+  fret: number
+): boolean {
+  if (!dead) return false;
+  return (dead[String(stringIdx)] ?? []).includes(fret);
+}
+
+interface Playable {
+  string: number;
+  fret: number;
+  midi: number;
+}
+
+/**
+ * Re-fingers notes that fall on dead frets, preferring an alternative position
+ * with the *same pitch* on another string; if none exists it nudges the fret by
+ * a semitone. Keeps exercise ids stable (curriculum stays pure) while honouring
+ * a specific instrument's dead spots.
+ */
+export function remapDeadFrets<T extends Playable>(
+  notes: T[],
+  dead: DeadFrets | null | undefined,
+  strings: StringDef[],
+  maxFret = 15
+): T[] {
+  if (!dead || Object.keys(dead).length === 0) return notes;
+  return notes.map((n) => {
+    if (!isDeadFret(dead, n.string, n.fret)) return n;
+
+    // same pitch on a different string?
+    for (let si = 0; si < strings.length; si++) {
+      const fret = n.midi - strings[si].midi;
+      if (fret >= 0 && fret <= maxFret && !isDeadFret(dead, si, fret)) {
+        return { ...n, string: si, fret };
+      }
+    }
+    // last resort: shift up/down a fret on the same string
+    for (const delta of [1, -1, 2, -2]) {
+      const fret = n.fret + delta;
+      if (fret >= 0 && fret <= maxFret && !isDeadFret(dead, n.string, fret)) {
+        return { ...n, fret, midi: strings[n.string].midi + fret };
+      }
+    }
+    return n;
+  });
+}
+
 /** Pick the open string nearest to a MIDI note (by absolute distance). */
 export function nearestStringIndex(strings: StringDef[], midi: number): number {
   let best = 0;

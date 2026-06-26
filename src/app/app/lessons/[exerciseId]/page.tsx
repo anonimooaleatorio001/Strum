@@ -7,7 +7,7 @@ import { practiceExercise } from "@/app/actions/lesson";
 import { requireOnboardedUser } from "@/server/session";
 import { getPathState } from "@/server/path";
 import { findExercise } from "@/lib/curriculum";
-import { getTuning } from "@/lib/instruments";
+import { getTuning, remapDeadFrets, type DeadFrets } from "@/lib/instruments";
 
 export default async function ExercisePage({
   params,
@@ -27,6 +27,8 @@ export default async function ExercisePage({
   const tuning = getTuning(user.instrument, user.numStrings);
   const stringLabels = tuning.map((s) => s.label);
   const settings = (user.settings as { waitMode?: boolean } | null) ?? {};
+  const deadFrets = (user.deadFrets as DeadFrets | null) ?? null;
+  const notes = remapDeadFrets(exercise.notes, deadFrets, tuning);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -55,7 +57,7 @@ export default async function ExercisePage({
       <LessonPlayer
         exerciseId={exercise.id}
         title={exercise.title}
-        notes={exercise.notes}
+        notes={notes}
         bpm={exercise.bpm}
         stringLabels={stringLabels}
         waitMode={Boolean(settings.waitMode)}
@@ -68,7 +70,7 @@ export default async function ExercisePage({
         </summary>
         <div className="border-t border-cyprus/10 px-5 py-5">
           <ExercisePlayer
-            notes={exercise.notes}
+            notes={notes}
             bpm={exercise.bpm}
             stringLabels={stringLabels}
           />
